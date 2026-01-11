@@ -388,3 +388,17 @@ export {
   type CommitConfig,
   type PreCommitResult
 } from './plugin-patterns/index.js';
+
+export {
+  // Ralph Verifier (Oracle-verified completion)
+  readVerificationState,
+  writeVerificationState,
+  clearVerificationState,
+  startVerification,
+  recordOracleFeedback,
+  getOracleVerificationPrompt,
+  getOracleRejectionContinuationPrompt,
+  detectOracleApproval,
+  detectOracleRejection,
+  type VerificationState
+} from './ralph-verifier/index.js';
