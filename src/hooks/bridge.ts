@@ -14,7 +14,7 @@
  */
 
 import { detectKeywordsWithType, removeCodeBlocks } from './keyword-detector/index.js';
-import { readRalphState, incrementRalphIteration, clearRalphState, detectCompletionPromise } from './ralph-loop/index.js';
+import { readRalphState, incrementRalphIteration, clearRalphState, detectCompletionPromise, createRalphLoopHook } from './ralph-loop/index.js';
 import { addBackgroundTask, completeBackgroundTask } from '../hud/background-tasks.js';
 import {
   readVerificationState,
@@ -30,7 +30,8 @@ import {
   ULTRATHINK_MESSAGE,
   SEARCH_MESSAGE,
   ANALYZE_MESSAGE,
-  TODO_CONTINUATION_PROMPT
+  TODO_CONTINUATION_PROMPT,
+  RALPH_MESSAGE
 } from '../installer/hooks.js';
 
 /**
@@ -126,11 +127,25 @@ function processKeywordDetector(input: HookInput): HookOutput {
     return { continue: true };
   }
 
-  // Priority: ultrawork > ultrathink > search > analyze
+  // Priority: ralph > ultrawork > ultrathink > search > analyze
+  const hasRalph = keywords.some(k => k.type === 'ralph');
   const hasUltrawork = keywords.some(k => k.type === 'ultrawork');
   const hasUltrathink = keywords.some(k => k.type === 'ultrathink');
   const hasSearch = keywords.some(k => k.type === 'search');
   const hasAnalyze = keywords.some(k => k.type === 'analyze');
+
+  if (hasRalph) {
+    // Activate ralph state which also auto-activates ultrawork
+    const sessionId = input.sessionId;
+    const directory = input.directory || process.cwd();
+    const hook = createRalphLoopHook(directory);
+    hook.startLoop(sessionId || 'cli-session', promptText);
+
+    return {
+      continue: true,
+      message: RALPH_MESSAGE
+    };
+  }
 
   if (hasUltrawork) {
     // Activate persistent ultrawork state

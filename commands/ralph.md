@@ -35,6 +35,15 @@ Ralph automatically activates Ultrawork for maximum parallel execution. You MUST
 | **Research** | `researcher-low` | `researcher` | - |
 | **Frontend** | `designer-low` | `designer` | `designer-high` |
 | **Docs** | `writer` | - | - |
+| **Visual** | - | `vision` | - |
+| **Planning** | - | - | `planner` |
+| **Critique** | - | - | `critic` |
+| **Pre-Planning** | - | - | `analyst` |
+| **Testing** | - | `qa-tester` | - |
+| **Security** | `security-reviewer-low` | - | `security-reviewer` |
+| **Build** | `build-fixer-low` | `build-fixer` | - |
+| **TDD** | `tdd-guide-low` | `tdd-guide` | - |
+| **Code Review** | `code-reviewer-low` | - | `code-reviewer` |
 
 **CRITICAL: Always pass `model` parameter explicitly!**
 ```
